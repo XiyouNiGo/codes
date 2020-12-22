@@ -2,11 +2,17 @@
 
 using namespace std;
 
+ struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ };
+
 int main(int argc, char *argv[])
 {
-    vector<int> arr(3);
-    for (auto i : arr)
-        cout << i << endl;
+    struct TreeNode a(1), b(1);
+    &a < &b;
     return 0;
 }
 
