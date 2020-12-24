@@ -5,23 +5,16 @@ using namespace std;
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int>& nums) {
-        stack<int> s;   //单调栈
-        map<int, int> m;
-        vector<int> res(nums.size());
-        for (int i = 0; i < 2 * nums.size() + 1; i++) {
-            while (!s.empty() && nums[i % nums.size()] > s.top()) {
-                m[s.top()] = nums[i % nums.size()];
+        int n = nums.size();
+        stack<int> s;
+        vector<int> res(n);
+        //利用%模拟循环数组
+        for (int i = 2 * n - 1; i >= 0; i--) {
+            while (!s.empty() && s.top() <= nums[i % n])
                 s.pop();
-            }
-            s.push(nums[i % nums.size()]);
+            res[i % n] = s.empty() ? -1 : s.top();
+            s.push(nums[i % n]);
         }
-        while (!s.empty()) {
-            m[s.top()] = -1;
-            s.pop();
-        }
-        for (int i = 0; i < nums.size(); i++) {
-            res[i] = m.find(nums[i])->second;
-        }
-        return res;
+        return res;    
     }
 };
