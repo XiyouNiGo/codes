@@ -24,6 +24,7 @@ public:
 //快慢指针
 class Solution {
 public:
+    /*
     bool hasCycle(ListNode *head) {
         if (!head || !head->next) return false;
         ListNode *fast = head->next, *slow = head;
@@ -35,5 +36,16 @@ public:
             slow = slow->next;
         }
         return true;
+    }*/
+    //fast和slow同起点
+    bool hasCycle(ListNode *head) {
+        ListNode *fast, *slow;
+        fast = slow = head;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) return true;
+        }
+        return false;
     }
 };
