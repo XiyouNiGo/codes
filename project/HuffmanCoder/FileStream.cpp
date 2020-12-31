@@ -18,17 +18,17 @@ int FileStream::GetChoiceInt(int min, int max, const string& init_prompt, const 
 }
 
 string FileStream::GetFilename(const char *prompt) {
-    static char *line_read = NULL;
-    if (line_read)
-    {
-	    free (line_read);
-	    line_read = (char *)NULL;
-    }
-    return line_read = readline(prompt);
-/*	string s;
-	printf("%s", prompt);
-	getline(cin, s);
-	return s;*/
+	static char *line_read = NULL;
+	if (line_read)
+	{
+	  free (line_read);
+	  line_read = (char *)NULL;
+	}
+	return line_read = readline(prompt);
+//	string s;
+//	printf("%s", prompt);
+//	getline(cin, s);
+//	return s;
 }
 //统计is中字符频率，存入w
 void FileStream::AnalyseFrequency(istream &is, map<unsigned char, unsigned long> &w,
@@ -56,33 +56,63 @@ void FileStream::EncodeAndWrite(istream &is, ostream &os, map<unsigned char, str
   os.write((char*)&num, sizeof num);
   os.write((char*)&leaf_num, sizeof leaf_num);
   //写入w，以便重建w
-  //从而重建HuffmanTreee
+  //从而重建HuffmanTree
   auto j = w.begin();
   for (int i = 0; i < leaf_num; i++) {
 	os.write((char*)&(j->first), sizeof j->first);
 	os.write((char*)&(j->second), sizeof j->second);
 	j++;
   }
-  cout << "EncodeAndWrite" << endl;
   //写入HuffmanCode
   while ((ch = is.get()) != 255) {
-    cout << hcodes[ch] << endl;
-	WriteByBit(os, hcodes[ch]);
+    for (auto &i : hcodes[ch])
+      WriteByBit(os, i, false);
+  }
+  //写完刷新缓冲区
+  WriteByBit(os, 'f', true);
+}
+
+//将string中内容按位写入os（通过缓冲区实现）
+void FileStream::WriteByBit(ostream &os, unsigned char ch, bool is_flush) {
+  static unsigned long count = 0;
+  static unsigned char buffer = 0;
+  static vector<unsigned char> bitset = GetBitSet();
+  //不是刷新操作则将字符写入buffer
+  //buffer满时写入
+  //刷新操作直接写入并清空buffer
+  if (is_flush == false) {
+	if (ch == '1')
+	  buffer |= bitset[count];
+	count++;
+
+	if (count == 8) {
+	  os.write((char *)&buffer, sizeof buffer);
+	  count = 0;
+	  buffer = 0;
+	}
+  } else {
+	os.write((char *)&buffer, sizeof buffer);
+	count = 0;
+	buffer = 0;
   }
 }
 
-//将string中内容按位写入os
-void FileStream::WriteByBit(ostream &os, string &buffer) {
-  os.write((char*)buffer.c_str(), buffer.size());
-}
-
-//将is中内容按位读入is
-//读到'0',返回0
-//读到'1',返回1
+//将is中内容按位读入
+//返回读到的位
 int FileStream::ReadByBit(istream &is) {
-  unsigned char ch;
-  is.read((char*)&ch, sizeof ch);
-  return ch == '0' ? 0 : 1;
+  static unsigned long count = 8;
+  static unsigned char buffer;
+  static vector<unsigned char> bitset = GetBitSet();
+  int ret;
+
+  //读满8字节，继续从文件读1字节到缓冲区
+  if (count == 8) {
+	is.read((char *)&buffer, sizeof buffer);
+	count = 0;
+  }
+  ret = (bitset[count] & buffer);
+  count++;
+  return ret;
 }
 
 //读取Huf文件头
@@ -101,7 +131,7 @@ void FileStream::ReadHufHead(istream &is, map<unsigned char, unsigned long> &w,
 
 //获取文件大小
 size_t FileStream::GetFileSize(const string &filename) {
-  std::ifstream in(filename.c_str());
+  std::ifstream in(filename);
   in.seekg(0, ifstream::end);
   size_t size = in.tellg();
   in.close();
@@ -124,4 +154,13 @@ void FileStream::DecodeAndWrite(istream &is, ostream &os, const vector<HuffmanTr
     }
 	os.write((char*)&(htree[p].ch), sizeof htree[p].ch);
   }
+}
+
+//获取位集合
+vector<unsigned char> FileStream::GetBitSet() {
+  vector<unsigned char> bitset(8);
+  for (int i = 0; i < 8; i++) {
+    bitset[i] = (1 << 7-i);
+  }
+  return bitset;
 }

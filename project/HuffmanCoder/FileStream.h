@@ -22,8 +22,9 @@ class FileStream {
 							 unsigned long num, unsigned long leaf_num);
   static void ReadHufHead(istream &is, map<unsigned char, unsigned long> &w,
 						  unsigned long &num, unsigned long &leaf_num);
-  static void WriteByBit(ostream &os, string &buffer);
+  static void WriteByBit(ostream &os, unsigned char ch, bool is_flush);
   static int ReadByBit(istream &is);
+  static vector<unsigned char> GetBitSet();
   static size_t GetFileSize(const std::string& filename);
 };
 

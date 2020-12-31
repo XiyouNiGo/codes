@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 	  }
 
 	  string output_filename = FileStream::GetFilename(
-		  "Enter the output filename(suffix '.huf') : ");
+		  "Enter the output filename(suffix '.huf' automatically added) : ");
 	  output_filename += ".huf";
 	  fstream output_file(output_filename);	//输出文件
 	  if (output_file.is_open()) {
@@ -48,11 +48,10 @@ int main(int argc, char **argv) {
 	  int num;	//字符总数
 	  FileStream::AnalyseFrequency(input_file, w, num);
 	  HuffmanTree htree(w);
-	  cout << htree;
 	  map<unsigned char, string> hcodes;
 	  htree.GenerateHuffmanCode(hcodes);
 	  FileStream::EncodeAndWrite(input_file, output_file, hcodes, w, num, htree.GetLeafNum());
-	  cout << "Before encoded : " << FileStream::GetFileSize(output_filename)
+	  cout << "After encoded : " << output_file.tellg()
 		   << " Bytes" << endl;
 	  cout << "Done!" << endl;
 	  break;
@@ -89,13 +88,7 @@ int main(int argc, char **argv) {
       unsigned long leaf_num, num;
       map<unsigned char, unsigned long> w;
       FileStream::ReadHufHead(input_file, w, num, leaf_num);
-//      for (auto &i : w) {
-//        cout << i.first << " " << i.second << endl;
-//      }
       HuffmanTree htree(w);
-      cout << htree;
-//      map<unsigned char, string> hcodes;
-//	  htree.GenerateHuffmanCode(hcodes);
       FileStream::DecodeAndWrite(input_file, output_file, htree.GetHtree(),
 								 num, leaf_num);
       cout << "Done!" << endl;

@@ -59,7 +59,6 @@ void HuffmanTree::GenerateHuffmanCode(map<unsigned char, string> &hcodes) {
   //再拷贝到string中
   deque<char> temp;
   unsigned long parent, child;
-//  cout << "leaf_num : " << leaf_num << endl;
   for (unsigned long i = 1; i <= leaf_num; ++i) {
 	child = i;
 	parent = htree[i].parent;
@@ -74,7 +73,6 @@ void HuffmanTree::GenerateHuffmanCode(map<unsigned char, string> &hcodes) {
 	  parent = htree[parent].parent;
 	}
 	hcodes[htree[i].ch] = string(temp.begin(), temp.end());
-	cout << htree[i].ch << " " << hcodes[htree[i].ch] << endl;
 	temp.clear();
   }
 }
