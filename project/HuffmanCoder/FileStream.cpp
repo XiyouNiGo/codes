@@ -33,10 +33,9 @@ string FileStream::GetFilename(const char *prompt) {
 //统计is中字符频率，存入w
 void FileStream::AnalyseFrequency(istream &is, map<unsigned char, unsigned long> &w,
 								  int &num) {
-  unsigned char ch;
+  int ch;
   num = 0;
-  //对于一字节，无符号255即有符号-1
-  while ((ch = is.get()) != 255) {
+  while ((ch = is.get()) != EOF) {
 	w[ch]++;
 	num++;
   }
@@ -51,7 +50,7 @@ void FileStream::EncodeAndWrite(istream &is, ostream &os, map<unsigned char, str
   //必须先将eofbit置位
   is.clear();
   is.seekg(0L, istream::beg);
-  unsigned char ch;
+  int ch;
   //写入num、leaf_num
   os.write((char*)&num, sizeof num);
   os.write((char*)&leaf_num, sizeof leaf_num);
@@ -64,7 +63,7 @@ void FileStream::EncodeAndWrite(istream &is, ostream &os, map<unsigned char, str
 	j++;
   }
   //写入HuffmanCode
-  while ((ch = is.get()) != 255) {
+  while ((ch = is.get()) != EOF) {
     for (auto &i : hcodes[ch])
       WriteByBit(os, i, false);
   }
