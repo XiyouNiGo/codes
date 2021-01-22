@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "my_allocator.h"
+#include "my_string.h"
 #include "my_iterator.h"
 
 using namespace std;

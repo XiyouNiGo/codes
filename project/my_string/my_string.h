@@ -6,6 +6,7 @@
 #define MY_STRING__MY_STRING_H_
 
 #include <cstring>
+#include <iostream>
 #include "my_iterator.h"
 #include "my_allocator.h"
 
@@ -152,6 +153,7 @@ class my_string {
 	for (size_type i = 0; i < _size; i++)
 	  *(_buffer + i) = *(str._buffer + i);
 	* (_buffer + _capacity - 1) = '\0';
+	return *this;
   }
 
   my_string &operator=(const char *s) {
@@ -164,20 +166,24 @@ class my_string {
 	for (size_type i = 0; i < _size; i++)
 	  *(_buffer + i) = *(s + i);
 	* (_buffer + _capacity - 1) = '\0';
+	return *this;
   }
 
   my_string &operator=(char c) {
     _size = 1;
     _capacity = DEFAULT_CAPACITY;
+    _alloc.deallocate(_buffer);
 	_buffer = _alloc.allocate(_capacity);
 	memset(_buffer, 0, _capacity);
 	*_buffer = c;
+	return *this;
   }
 
   my_string &operator=(std::initializer_list<char> il) {
     _size = il.end() - il.begin();
 	for (size_type i = 0; i * DEFAULT_CAPACITY <= _size; i++)
 	  _capacity = (i+1) * DEFAULT_CAPACITY;
+	_alloc.deallocate(_buffer);
 	_buffer = _alloc.allocate(_capacity);
 	memset(_buffer, 0, _capacity);
 	int i = 0;
@@ -186,6 +192,7 @@ class my_string {
 	  i++;
 	}
 	* (_buffer + _capacity - 1) = '\0';
+	return *this;
   }
 
   my_string &operator=(my_string &&str) noexcept {
@@ -197,6 +204,7 @@ class my_string {
 	for (size_type i = 0; i < _size; i++)
 	  *(_buffer + i) = *(str._buffer + i);
 	* (_buffer + _capacity - 1) = '\0';
+	return *this;
   }
 
   iterator begin() noexcept {
@@ -284,6 +292,7 @@ class my_string {
     for (size_type i = 0; i < _capacity; i++)
       *(new_buffer + i) = *(old_buffer + i);
 	* (_buffer + _capacity - 1) = '\0';
+	_alloc.deallocate(old_buffer);
 	if (n < size())
 	  _size = n;
   }
@@ -452,6 +461,7 @@ class my_string {
 	for (size_type i = 0; i < _size - pos; i++)
 	  *(_buffer + i + pos + str._size) = *(old_buffer + i + pos);
 	_size += str._size;
+	_alloc.deallocate(_buffer);
 	return *this;
   }
 
@@ -510,27 +520,177 @@ class my_string {
     erase(first - begin(), last - first);
     return first;
   }
-  my_string& replace (size_t pos,        size_t len,        const my_string& str);
-  my_string& replace (const_iterator i1, const_iterator i2, const my_string& str);
+  my_string& replace (size_t pos,        size_t len,        const my_string& str) {
+	if (pos >= _size)
+	  throw std::out_of_range("cross the border");
+	for (size_type i = 0; i * DEFAULT_CAPACITY <= _size + str._size - len; i++)
+	  _capacity = (i+1) * DEFAULT_CAPACITY;
+	pointer new_buffer = _alloc.allocate(_capacity);
+	if (new_buffer == nullptr)
+	  throw std::bad_alloc();
+	pointer old_buffer = _buffer;
+	_buffer = new_buffer;
+	memset(_buffer, 0, _capacity);
+	for (size_type i = 0; i < pos; i++)
+	  *(_buffer + i) = *(old_buffer + i);
+	for (size_type i = 0; i < str._size; i++)
+	  *(_buffer + i + pos) = *(str._buffer + i);
+	for (size_type i = 0; i < _size - pos - len; i++)
+	  *(_buffer + i + pos + str._size) = *(old_buffer + i + pos + len);
+	_size += str._size;
+	_alloc.deallocate(_buffer);
+	return *this;
+  }
+  my_string& replace (const_iterator i1, const_iterator i2, const my_string& str) {
+    return replace(i1 - cbegin(), i2 - i1, str);
+  }
 
   my_string& replace (size_t pos,        size_t len,        const my_string& str,
-				   size_t subpos, size_t sublen);
+				   size_t subpos, size_t sublen) {
+	return replace(pos, len, my_string(str, subpos, sublen));
+  }
 
-  my_string& replace (size_t pos,        size_t len,        const char* s);
-  my_string& replace (const_iterator i1, const_iterator i2, const char* s);
+  my_string& replace (size_t pos,        size_t len,        const char* s) {
+	return replace(pos, len, my_string(s));
+  }
 
-  my_string& replace (size_t pos,        size_t len,        const char* s, size_t n);
-  my_string& replace (const_iterator i1, const_iterator i2, const char* s, size_t n);
+  my_string& replace (const_iterator i1, const_iterator i2, const char* s) {
+	return replace(i1 - cbegin(), i2 - i1, s);
+  }
 
-  my_string& replace (size_t pos,        size_t len,        size_t n, char c);
-  my_string& replace (const_iterator i1, const_iterator i2, size_t n, char c);
+  my_string& replace (size_t pos,        size_t len,        const char* s, size_t n) {
+	return replace(pos, len, my_string(s, n));
+  }
+
+  my_string& replace (const_iterator i1, const_iterator i2, const char* s, size_t n) {
+	return replace(i1 - cbegin(), i2 - i1, my_string(s, n));
+
+  }
+
+  my_string& replace (size_t pos,        size_t len,        size_t n, char c) {
+	return replace(pos, len, my_string(n, c));
+  }
+
+  my_string& replace (const_iterator i1, const_iterator i2, size_t n, char c) {
+	return replace(i1 - cbegin(), i2 - i1, my_string(n, c));
+
+  }
 
   template <class InputIterator>
   my_string& replace (const_iterator i1, const_iterator i2,
-				   InputIterator first, InputIterator last);
+				   InputIterator first, InputIterator last) {
+	return replace(i1 - cbegin(), i2 - i1, my_string(first, last));
+  }
 
-  my_string& replace (const_iterator i1, const_iterator i2, std::initializer_list<char> il);
+  my_string& replace (const_iterator i1, const_iterator i2, std::initializer_list<char> il) {
+	return replace(i1 - cbegin(), i2 - i1, my_string(il.begin(), il.end()));
+  }
 
+  void swap (my_string& str) {
+    std::swap(_buffer, str._buffer);
+    std::swap(_size, str._size);
+	std::swap(_capacity, str._capacity);
+  }
+
+  void pop_back() {
+	if (_size == 0)
+	  throw std::logic_error("empty my_string");
+	_buffer[_size - 1] = '\0';
+	_size--;
+  }
+
+  const char* c_str() const noexcept {
+	return _buffer;
+  }
+
+  const char* data() const noexcept {
+    return _buffer;
+  }
+
+  allocator_type get_allocator() const {
+    return _alloc;
+  }
+
+  size_t copy (char* s, size_t len, size_t pos = 0) const {
+	if (pos >= _size)
+	  throw std::out_of_range("cross the border");
+	if (pos + len > _size)
+	  len = _size - pos;
+	for (size_type i = pos; i < pos + len; i++)
+	  s[i] = _buffer[i];
+	return _size - pos;
+  }
+
+  //kmp_search
+  size_t find (const my_string& str, size_t pos = 0) const {
+	return find(str.c_str(), pos, _size);
+  }
+
+  size_t find (const char* s, size_t pos = 0) const {
+	return find(s, pos, _size);
+  }
+
+  size_t find (const char* s, size_t pos, size_t n) const {
+	const char *pattern = s;
+	const char *target = _buffer;
+	int len = strlen(pattern);
+	int prefix_table[len];
+	prefix_table[0] = -1;
+	prefix_table_init(pattern, prefix_table + 1, len - 1);
+	return kmp_search(pattern, target, prefix_table);
+  }
+
+  size_t find (char c, size_t pos = 0) const {
+    if (pos >= _size)
+	  throw std::out_of_range("cross the border");
+    for (size_type i = pos; i < _size; i++)
+      if (_buffer[i] == c)
+        return i;
+	return npos;
+  }
+
+  my_string substr (size_t pos = 0, size_t len = npos) const {
+    return my_string(*this, pos, len);
+  }
+
+  int compare(size_type pos, size_type len, const my_string& str) const {
+	if (pos >= _size)
+	  throw std::out_of_range("cross the border");
+	if (pos + len > _size)
+	  len = _size - pos;
+	for (size_type i = 0; i < std::min(len, str._size); i++) {
+	  if (_buffer[i + pos] < str._buffer[i])
+	    return -1;
+	  if (_buffer[i + pos] > str._buffer[i])
+	    return 1;
+	}
+	if (len < str._size)
+	  return -1;
+	if (len > str._size)
+	  return 1;
+	return 0;
+  }
+  
+  int compare (const my_string& str) const {
+    return compare(0, str.size(), str);
+  }
+
+  int compare (size_t pos, size_t len, const my_string& str,
+			   size_t subpos, size_t sublen) const {
+	return compare(0, sublen, my_string(str, subpos, sublen));
+  }
+
+  int compare (const char* s) const {
+    return compare(my_string(s));
+  }
+
+  int compare (size_t pos, size_t len, const char* s) const {
+    return compare(pos, len, my_string(s));
+  }
+
+  int compare (size_t pos, size_t len, const char* s, size_t n) const {
+	return compare(pos, len, my_string(s, 0, n));
+  }
 
  private:
 
@@ -558,6 +718,7 @@ class my_string {
 		*(_buffer + i) = *(old_buffer + i);
 	  for (size_type i = _size; i <= n; i++)
 		*(_buffer + i) = c;
+	  _alloc.deallocate(_buffer);
 	}
 	_size = n;
   }
@@ -571,6 +732,102 @@ class my_string {
       temp[i] = s2[i];
     return my_string(temp);
   }
+
+  void prefix_table_init(const char *pattern, int *prefix_table, int n) const {
+	prefix_table[0] = 0;
+	int i = 1;
+	int j = 0;
+	while (i < n) {
+	  if (pattern[i] == pattern[j]) {
+		j++;
+		prefix_table[i] = j;
+		i++;
+	  } else {
+		if (j == 0) {
+		  prefix_table[i] = 0;
+		  i++;
+		} else
+		   j = prefix_table[j];
+	  }
+	}
+  }
+
+  size_type kmp_search(const char *pattern, const char *target, int *prefix_table) const {
+	int len_pattern = strlen(pattern);
+	int len_target = strlen(target);
+	int i = 0;
+	int j = 0;
+	while (i < len_target) {
+	  if ((j == len_pattern - 1) && (target[i] == pattern[j])) {
+		return i - j;
+		//j = prefix_table[j];
+	  }
+	  if (target[i] == pattern[j]) {
+		i++;
+		j++;
+	  } else {
+		  if (j == 0) {
+			i++;
+			j++;
+		  } else {
+			j = prefix_table[j];
+		  }
+	  }
+	}
+	return npos;
+  }
+
+
+  friend my_string operator+ (const my_string& lhs, const my_string& rhs);
+  friend my_string operator+ (my_string&&      lhs, my_string&&      rhs);
+  friend my_string operator+ (my_string&&      lhs, const my_string& rhs);
+  friend my_string operator+ (const my_string& lhs, my_string&&      rhs);
+
+  friend my_string operator+ (const my_string& lhs, const char*   rhs);
+  friend my_string operator+ (my_string&&      lhs, const char*   rhs);
+  friend my_string operator+ (const char*   lhs, const my_string& rhs);
+  friend my_string operator+ (const char*   lhs, my_string&&      rhs);
+
+  friend my_string operator+ (const my_string& lhs, char          rhs);
+  friend my_string operator+ (my_string&&      lhs, char          rhs);
+  friend my_string operator+ (char          lhs, const my_string& rhs);
+  friend my_string operator+ (char          lhs, my_string&&      rhs);
+
+  friend bool operator== (const my_string& lhs, const my_string& rhs);
+  friend bool operator== (const char*   lhs, const my_string& rhs);
+  friend bool operator== (const my_string& lhs, const char*   rhs);
+
+  friend bool operator!= (const my_string& lhs, const my_string& rhs);
+  friend bool operator!= (const char*   lhs, const my_string& rhs);
+  friend bool operator!= (const my_string& lhs, const char*   rhs);
+
+  friend bool operator<  (const my_string& lhs, const my_string& rhs);
+  friend bool operator<  (const char*   lhs, const my_string& rhs);
+  friend bool operator<  (const my_string& lhs, const char*   rhs);
+
+  friend bool operator<= (const my_string& lhs, const my_string& rhs);
+  friend bool operator<= (const char*   lhs, const my_string& rhs);
+  friend bool operator<= (const my_string& lhs, const char*   rhs);
+
+  friend bool operator>  (const my_string& lhs, const my_string& rhs);
+  friend bool operator>  (const char*   lhs, const my_string& rhs);
+  friend bool operator>  (const my_string& lhs, const char*   rhs);
+
+  friend bool operator>= (const my_string& lhs, const my_string& rhs);
+  friend bool operator>= (const char*   lhs, const my_string& rhs);
+  friend bool operator>= (const my_string& lhs, const char*   rhs);
+
+  friend void swap (my_string& x, my_string& y);
+
+  friend std::istream& operator>> (std::istream& is, my_string& str);
+
+  friend std::ostream& operator<< (std::ostream& os, const my_string& str);
+
+  friend std::istream& getline (std::istream&  is, my_string& str, char delim);
+  friend std::istream& getline (std::istream&& is, my_string& str, char delim);
+
+  friend std::istream& getline (std::istream&  is, my_string& str);
+  friend std::istream& getline (std::istream&& is, my_string& str);
 };
 
 #endif //MY_STRING__MY_STRING_H_
