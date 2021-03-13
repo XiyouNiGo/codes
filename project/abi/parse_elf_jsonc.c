@@ -42,7 +42,7 @@ void read_file_header(int fd, struct json_object *elf_json_object) {
   json_object_object_add(elf_json_object, "File Header", file_header_json_obeject);
 }
 
-void read__program_header(int fd, struct json_object *elf_json_object) {
+void read_program_header(int fd, struct json_object *elf_json_object) {
   if (lseek(fd, offsetof(Elf64_Ehdr, e_phoff), SEEK_SET) == -1)
     my_err("lseek error");
   Elf64_Off e_phoff;
@@ -80,7 +80,7 @@ void read__program_header(int fd, struct json_object *elf_json_object) {
   json_object_object_add(elf_json_object, "Program Headers", program_header_json_array);
 }
 
-void read__section_header(int fd, struct json_object *elf_json_object) {
+void read_section_header(int fd, struct json_object *elf_json_object) {
   if (lseek(fd, offsetof(Elf64_Ehdr, e_shoff), SEEK_SET) == -1)
   	my_err("lseek error");
   Elf64_Off e_shoff;
@@ -133,8 +133,8 @@ int main(int argc, char **argv) {
   struct json_object *elf_json_object = json_object_new_object();
 
   read_file_header(fd, elf_json_object);
-  read__program_header(fd, elf_json_object);
-  read__section_header(fd, elf_json_object);
+  read_program_header(fd, elf_json_object);
+  read_section_header(fd, elf_json_object);
 
   printf("%s\n", json_object_to_json_string(elf_json_object));
   json_object_put(elf_json_object);
