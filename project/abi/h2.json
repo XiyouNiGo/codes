@@ -1,0 +1,29 @@
+{
+        "ELF Header":   {
+                "Magic":        "7f454c46010101000000000000000000",
+                "Class":        "ELF32",
+                "Data": "2's complement, little endian",
+                "Version":      {
+                        "0":    1,
+                        "1":    "(current)"
+                },
+                "OS/ABI":       "UNIX - System V",
+                "ABI Version":  1,
+                "Type": "EXEC (Executable file)",
+                "Machine":      "Intel 80386",
+                "Version":      "0x1",
+                "Entry point address":  134517393,
+                "Start of program headers":     53,
+                "Start of section headers":     558621,
+                "Flags":        {
+                        "0":    "0x0",
+                        "1":    ""
+                },
+                "Size of this header":  "52",
+                "Size of program headers":      "32",
+                "Number of program headers":    "8",
+                "Size of section headers":      "40",
+                "Number of section headers":    "40",
+                "Section header string table index":    "37"
+        }
+}

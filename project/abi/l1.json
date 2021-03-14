@@ -1,0 +1,82 @@
+{
+        "Program Header":       {
+                "Elf file type":        "EXEC (Executable file)",
+                "Entry point":  134517392,
+                "elf_header.e_phnum":   8,
+                "starting at offset":   52,
+                "Program Headers":      [{
+                                "Type": "PHDR",
+                                "Offset":       "0x000034",
+                                "VirtAddr":     "0x08048034",
+                                "PhysAddr":     "0x08048034",
+                                "FileSiz":      "0x00100",
+                                "MemSiz":       "0x00100",
+                                "Flg":  "R E ",
+                                "Align":        "0x4"
+                        }, {
+                                "Type": "INTERP",
+                                "Offset":       "0x000134",
+                                "VirtAddr":     "0x08048134",
+                                "PhysAddr":     "0x08048134",
+                                "FileSiz":      "0x00013",
+                                "MemSiz":       "0x00013",
+                                "Flg":  "R   ",
+                                "Align":        "0x1"
+                        }, {
+                                "Type": "LOAD",
+                                "Offset":       "0x000000",
+                                "VirtAddr":     "0x08048000",
+                                "PhysAddr":     "0x08048000",
+                                "FileSiz":      "0x40af0",
+                                "MemSiz":       "0x40af0",
+                                "Flg":  "R E ",
+                                "Align":        "0x1000"
+                        }, {
+                                "Type": "LOAD",
+                                "Offset":       "0x041000",
+                                "VirtAddr":     "0x08089000",
+                                "PhysAddr":     "0x08089000",
+                                "FileSiz":      "0x00b44",
+                                "MemSiz":       "0x02d70",
+                                "Flg":  "RW  ",
+                                "Align":        "0x1000"
+                        }, {
+                                "Type": "DYNAMIC",
+                                "Offset":       "0x041014",
+                                "VirtAddr":     "0x08089014",
+                                "PhysAddr":     "0x08089014",
+                                "FileSiz":      "0x000d8",
+                                "MemSiz":       "0x000d8",
+                                "Flg":  "RW  ",
+                                "Align":        "0x4"
+                        }, {
+                                "Type": "NOTE",
+                                "Offset":       "0x000148",
+                                "VirtAddr":     "0x08048148",
+                                "PhysAddr":     "0x08048148",
+                                "FileSiz":      "0x00044",
+                                "MemSiz":       "0x00044",
+                                "Flg":  "R   ",
+                                "Align":        "0x4"
+                        }, {
+                                "Type": "GNU_EH_FRAME",
+                                "Offset":       "0x0409a4",
+                                "VirtAddr":     "0x080889a4",
+                                "PhysAddr":     "0x080889a4",
+                                "FileSiz":      "0x00034",
+                                "MemSiz":       "0x00034",
+                                "Flg":  "R   ",
+                                "Align":        "0x4"
+                        }, {
+                                "Type": "GNU_STACK",
+                                "Offset":       "0x000000",
+                                "VirtAddr":     "0x00000000",
+                                "PhysAddr":     "0x00000000",
+                                "FileSiz":      "0x00000",
+                                "MemSiz":       "0x00000",
+                                "Flg":  "RW  ",
+                                "Align":        "0x4"
+                        }],
+                "Segment Sections":     [["GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK", "GNU_STACK"], [".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp", ".interp"], [".interp", ".note.ABI-tag", ".note.gnu.build-id", ".gnu.hash", ".dynsym", ".dynstr", ".gnu.version", ".gnu.version_r", ".rel.dyn", ".rel.plt", ".init", ".plt", ".text", ".fini", ".rodata", ".eh_frame_hdr", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame"], [".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".eh_frame", ".ctors", ".dtors", ".jcr", ".dynamic", ".got", ".got.plt", ".data", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss"], [".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".bss", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic", ".dynamic"], [".dynamic", ".note.ABI-tag", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id"], [".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".note.gnu.build-id", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr"], [".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr", ".eh_frame_hdr"]]
+        }
+}
