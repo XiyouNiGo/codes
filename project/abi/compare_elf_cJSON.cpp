@@ -277,7 +277,6 @@ void compare_option_x_i(const char *filename1, const char *filename2) {
   const char *section_name;
   std::map<const char*, struct cJSON*> s_map;
 
-  printf("*%d*", array1_size);
   // create a map of sections
   for (int i = 0; i < array1_size; ++i) {
 	temp1_cJSON = cJSON_GetArrayItem(temp1_array_cJSON, i);
@@ -315,15 +314,23 @@ int main(int argc, char *argv[]) {
 //  if (argc != completed_option_nums * 2 + 1) {
 //	printf("Usage : %s <filename-h-1> <filename-h-2> "
 //		   "<filename-S-1> <filename-S-2> "
-//           "<filename-l-1> <filename-l-2> ", argv[0]);
+//		   "<filename-l-1> <filename-l-2> "
+//		   "<filename-r-1> <filename-r-2> "
+//           "<filename-x-i-1> <filename-x-i-2> ", argv[0]);
 //	return -1;
 //  }
 
-//  compare_option_h("/home/nigo/桌面/codes/project/abi/h1.json", "/home/nigo/桌面/codes/project/abi/h2.json");
-//  compare_option_S("/home/nigo/桌面/codes/project/abi/S1.json", "/home/nigo/桌面/codes/project/abi/S2.json");
-//  compare_option_l("/home/nigo/桌面/codes/project/abi/l1.json", "/home/nigo/桌面/codes/project/abi/l2.json");
-//  compare_option_r("/home/nigo/桌面/codes/project/abi/r1.json", "/home/nigo/桌面/codes/project/abi/r2.json");
-//  compare_option_x_i("/home/nigo/桌面/codes/project/abi/x1.json", "/home/nigo/桌面/codes/project/abi/x2.json");
+  compare_option_h("h1.json", "h2.json");
+  compare_option_S("S1.json", "S2.json");
+  compare_option_l("l1.json", "l2.json");
+  compare_option_r("r1.json", "r2.json");
+  compare_option_x_i("x1.json", "x2.json");
+
+//  compare_option_h(argv[1], argv[2]);
+//  compare_option_S(argv[3], argv[4]);
+//  compare_option_l(argv[5], argv[6]);
+//  compare_option_r(argv[7], argv[8]);
+//  compare_option_x_i(argv[9], argv[10]);
 
   printf("different items number : %d\n", diff_item_num);
   printf("same items number : %d\n", same_item_num);
