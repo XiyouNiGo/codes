@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -22,42 +23,158 @@ using namespace std;
                                     exit(1); \
                             } \
 
-enum MoveType {
-  MoveType_None,
-  MoveType_Down,
-  MoveType_Right,
-  MoveType_Diagonal
+enum move_type {
+  move_none,
+  move_down,
+  move_right,
+  move_diagonal
 };
 
-struct Point {
+map<move_type, const char*> color = {
+	{move_down, "\033[32m"},
+	{move_right, "\033[31m"},
+	{move_diagonal, "\033[39m"},
+	{move_none, "\033[0m"}
+};
+
+class Point {
+  friend move_type compare(const Point &prev_point, const Point &point);
+ public:
   Point(int x, int y) {
 	this->x = x;
 	this->y = y;
   }
 
-  bool operator==(const Point &pt) const {
-	return this->x == pt.x && this->y == pt.y;
+  bool operator==(const Point &point) const {
+	return this->x == point.x && this->y == point.y;
   }
 
-  bool operator!=(const Point &pt) const {
-	return this->x != pt.x || this->y != pt.y;
+  bool operator!=(const Point &point) const {
+	return this->x != point.x || this->y != point.y;
   }
 
-  MoveType operator>(const Point &pt2) {
-	if (this->x == pt2.x && this->y + 1 == pt2.y) {
-	  return MoveType_Down;
-	} else if (this->y == pt2.y && this->x + 1 == pt2.x) {
-	  return MoveType_Right;
-	} else if (this->x + 1 == pt2.x && this->y + 1 == pt2.y) {
-	  return MoveType_Diagonal;
-	}
-
-	return MoveType_None;
-  }
-
+ public:
   int x = 0;
   int y = 0;
 };
+
+// compare previous point and point
+move_type compare(const Point &prev_point, const Point &point) {
+  if (prev_point.x == point.x && prev_point.y + 1 == point.y) {
+	return move_down;
+  } else if (prev_point.y == point.y && prev_point.x + 1 == point.x) {
+	return move_right;
+  } else if (prev_point.x + 1 == point.x && prev_point.y + 1 == point.y) {
+	return move_diagonal;
+  }
+  return move_none;
+}
+
+// myers' diff algorithm:
+// T1 and T2 should overload operator[] and size
+// for example, T1 and T2 can be
+// string to compare character
+// or vector<T> to compare T
+template<typename T1, typename T2>
+void myers_diff(const T1 &lhs, const T2 &rhs) {
+  int N = lhs.size();
+  int M = rhs.size();
+  // map to save v of every d
+  vector<map<int, int>> res_v;
+  // map to save x by k
+  // k -> x
+  map<int, int> v;
+  // base point : (0,-1)
+  v[1] = 0;
+  bool go_ahead = true;
+  // d: step(excludes move of diagonal)
+  // k: x - y
+  for (int d = 0; d <= N + M && go_ahead; d++) {
+	for (int k = -d; k <= d; k = k + 2) {
+	  // delete is preferred
+	  // so move right is preferred
+	  // so bigger x is preferred
+	  bool down = (k == -d || (k != d && v[k - 1] < v[k + 1]));
+	  int k_prev = down ? k + 1 : k - 1;
+	  // start point
+	  int x_start = v[k_prev];
+	  int y_start = x_start - k_prev;
+	  // temp(mid) point
+	  int x_tmp = down ? x_start : x_start + 1;
+	  int y_tmp = x_tmp - k;
+	  // end point
+	  int x_end = x_tmp;
+	  int y_end = y_tmp;
+	  // move along the diagonal
+	  while (x_end < N && y_end < M && lhs[x_end] == rhs[y_end]) {
+		++x_end;
+		++y_end;
+	  }
+	  v[k] = x_end;
+	  // the result is found
+	  if (x_end >= N && y_end >= M) {
+		go_ahead = false;
+		break;
+	  }
+	}
+	// store the result
+	res_v.push_back(v);
+  }
+
+  // the fallback
+  vector<Point> path;
+  Point point(lhs.size(), rhs.size());
+  path.push_back(point);
+  for (int d = res_v.size() - 1; point.x > 0 || point.y > 0; --d) {
+	auto X = res_v[d];
+	int k = point.x - point.y;
+	int x_end = X[k];
+	int y_end = point.x - k;
+	// whether move along the diagonal
+	while (x_end > 0 && y_end > 0 && x_end <= N && y_end <= M && lhs[x_end - 1] == rhs[y_end - 1]) {
+	  --x_end;
+	  --y_end;
+	  path.push_back(Point(x_end, y_end));
+	}
+
+	bool down = (k == -d || (k != d && X[k - 1] < X[k + 1]));
+	int k_prev = down ? k + 1 : k - 1;
+
+	int x_start = X[k_prev];
+	int y_start = x_start - k_prev;
+
+	path.push_back(Point(x_start, y_start));
+
+	point.x = x_start;
+	point.y = y_start;
+  }
+
+  // pop (0,-1)
+  path.pop_back();
+
+  // compare and print
+  if (path.size() >= 2) {
+	int size = path.size();
+	for (int i = size - 2; i >= 0; --i) {
+	  Point prev_point = path[i + 1];
+	  move_type type = compare(prev_point, path[i]);
+	  switch (type) {
+		case move_right: {
+		  cout << color[move_right] << "-" << lhs[prev_point.x] << endl;
+		  break;
+		}
+		case move_down: {
+		  cout << color[move_down] << "+" << rhs[prev_point.y] << endl;
+		  break;
+		}
+		case move_diagonal: {
+		  cout << color[move_diagonal] << "=" << lhs[prev_point.x] << endl;
+		  break;
+		}
+	  }
+	}
+  }
+}
 
 const int completed_option_nums = 2;
 const double double_min_interval = 1e-6;
@@ -65,92 +182,24 @@ const double double_min_interval = 1e-6;
 long int diff_item_num = 0, same_item_num = 0,
 	added_item_num = 0, deleted_item_num = 0;
 
-map<MoveType, const char*> color = {
-	{MoveType_Down, "\033[32m"},
-	{MoveType_Right, "\033[31m"},
-	{MoveType_Diagonal, "\033[39m"},
-	{MoveType_None, "\033[0m"}
-};
+// split std::string by sep
+// then return a vector<string> to store the result
+vector<string> split_string(const string &str, const string &sep) {
+  vector<string> res;
+  string temp_s = str + sep;
+  size_t pos = temp_s.find(sep);
+  size_t size = temp_s.size();
 
-// myers' diff algorithm
-template<typename T1, typename T2>
-void myers_diff(const T1 &lhs, const T2 &rhs) {
-  int N = lhs.size();
-  int M = rhs.size();
-  vector<map<int, int>> res_v;
-  map<int, int> v;
-  v[1] = 0;
-  bool go_ahead = true;
-  for (int d = 0; d <= N + M && go_ahead; d++) {
-	for (int k = -d; k <= d; k = k + 2) {
-	  bool down = (k == -d || (k != d && v[k - 1] < v[k + 1]));
-	  int kPrev = down ? k + 1 : k - 1;
-	  int xStart = v[kPrev];
-	  int yStart = xStart - kPrev;
-	  int xTmp = down ? xStart : xStart + 1;
-	  int yTmp = xTmp - k;
-	  int xEnd = xTmp;
-	  int yEnd = yTmp;
-	  while (xEnd < N && yEnd < M && lhs[xEnd] == rhs[yEnd]) {
-		++xEnd;
-		++yEnd;
-	  }
-	  v[k] = xEnd;
-
-	  if (xEnd >= N && yEnd >= M) {
-		go_ahead = false;
-		break;
-	  }
-	}
-	res_v.push_back(v);
+  while (pos != string::npos) {
+    // escape empty string(when sep is in the end)
+	if (pos == 0)
+	  break;
+	string s = temp_s.substr(0, pos);
+	res.push_back(s);
+	temp_s = temp_s.substr(pos + 1, size);
+	pos = temp_s.find(sep);
   }
-
-  vector<Point> path;
-  Point pt(lhs.size(), rhs.size());
-  path.push_back(pt);
-  for (int d = res_v.size() - 1; pt.x > 0 || pt.y > 0; --d) {
-	auto X = res_v[d];
-	int k = pt.x - pt.y;
-
-	int xEnd = X[k];
-	int yEnd = pt.x - k;
-	while (xEnd > 0 && yEnd > 0 && xEnd <= N && yEnd <= M && lhs[xEnd - 1] == rhs[yEnd - 1]) {
-	  --xEnd;
-	  --yEnd;
-	  path.push_back(Point(xEnd, yEnd));
-	}
-	bool down = (k == -d || (k != d && X[k - 1] < X[k + 1]));
-	int kPrev = down ? k + 1 : k - 1;
-	int xStart = X[kPrev];
-	int yStart = xStart - kPrev;
-	path.push_back(Point(xStart, yStart));
-	pt.x = xStart;
-	pt.y = yStart;
-  }
-
-  path.pop_back();
-
-  if (path.size() >= 2) {
-	int size = path.size();
-	for (int i = size - 2; i >= 0; --i) {
-	  Point prev_point = path[i + 1];
-	  MoveType type = prev_point > (path[i]);
-	  switch (type) {
-		case MoveType_Right: {
-		  cout << color[MoveType_Right] << "-" << lhs[prev_point.x] << endl;
-		  break;
-		}
-		case MoveType_Down: {
-		  cout << color[MoveType_Down] << "+" << rhs[prev_point.y] << endl;
-		  break;
-		}
-		case MoveType_Diagonal: {
-		  cout << color[MoveType_Diagonal] << "=" << lhs[prev_point.x] << endl;
-		  break;
-		}
-	  }
-	}
-  }
+  return res;
 }
 
 // parse from a filename to a json object
@@ -172,6 +221,15 @@ struct cJSON *cJSON_ParseFilename(const char *filename) {
   return cJSON_Parse(read_buf);
 }
 
+// judge buf whether is number key
+int is_number_key(const char *buf) {
+  // number Key won't be printed
+  // atoi return 0 when error happens or string is "0"
+  if ((atoi(buf) != 0) && (!(*buf == '0' && (buf[1] == '\0'))))
+    return 0;
+  return 1;
+}
+
 // compare normal cJSON Object and print
 int cJSON_ComparePrintNormal(const struct cJSON *object1, const struct cJSON *object2, const char *dst_str) {
   const struct cJSON *json1, *json2;
@@ -191,13 +249,10 @@ int cJSON_ComparePrintNormal(const struct cJSON *object1, const struct cJSON *ob
 
 	if (strcmp(str1, str2) != 0) {
 	  diff_item_num++;
-	  // number Key won't be printed
-	  // atoi return 0 when error happens or string is "0"
-//	  if ((atoi(dst_str) != 0) )
-	  if (!(strlen(dst_str) == 1 && isdigit(*dst_str)))
+	  if (is_number_key(dst_str))
 		printf("%s : \n", dst_str);
-	  cout << color[MoveType_Right] << "-" << str1 << endl << color[MoveType_None];
-	  cout << color[MoveType_Down] << "+" << str2 << endl << color[MoveType_None];
+	  cout << color[move_right] << "-" << str1 << endl << color[move_none];
+	  cout << color[move_down] << "+" << str2 << endl << color[move_none];
 	} else {
 	  same_item_num++;
 	}
@@ -209,10 +264,10 @@ int cJSON_ComparePrintNormal(const struct cJSON *object1, const struct cJSON *ob
 
 	if (fabs(d1 - d2) > double_min_interval) {
 	  diff_item_num++;
-	  if (!(strlen(dst_str) == 1 && isdigit(*dst_str)))
-		printf("%s : \n", dst_str);
+	  if (is_number_key(dst_str))
+		  printf("%s : \n", dst_str);
 	  printf("%s-%.0lf\n%s+%.0lf\n%s",
-		  color[MoveType_Right], d1, color[MoveType_Down], d2, color[MoveType_None]);
+		  color[move_right], d1, color[move_down], d2, color[move_none]);
 	} else {
 	  same_item_num++;
 	}
@@ -226,7 +281,8 @@ int cJSON_ComparePrintNormal(const struct cJSON *object1, const struct cJSON *ob
 	sprintf(nk_buf, "%d", 0);
 	while (cJSON_ComparePrintNormal(json1, json2, nk_buf) != -1) {
 	  // 0 to 1 to ...
-	  (*nk_buf)++;
+	  int nk = atoi(nk_buf);
+	  sprintf(nk_buf, "%d", ++nk);
 	}
   } else {
 	printf("%s\n", dst_str);
@@ -384,6 +440,74 @@ void compare_option_r(const char *filename1, const char *filename2) {
   cJSON_Delete(object2);
 }
 
+// print section cJSON object like
+// {"section_name":{"0":"address","1":"value"}
+void cJSON_PrintSection(struct cJSON *section_object, const char *section_name, move_type type) {
+  printf("%s", color[type]);
+  if (type == move_right) {
+   printf("-");
+  } else if (type == move_down) {
+	printf("+");
+  }
+  printf("%s : \n", section_name);
+  auto temp_cJSON = cJSON_GetObjectItem(section_object, section_name);
+  printf("address : %s\n", cJSON_GetObjectItem(temp_cJSON, "0")->valuestring);
+
+  auto vec_s = split_string(cJSON_GetObjectItem(temp_cJSON, "1")->valuestring, " ");
+  int i;
+  for (i = 0; i < vec_s.size(); i++) {
+    if (i == 4) {
+	  i = 0;
+	  printf("\n");
+	}
+    cout << vec_s[i] << " ";
+  }
+  if (i != 4)
+	printf("\n");
+
+  printf("%s", color[move_none]);
+}
+
+// compare section cJSON object like
+// {"section_name":{"0":"address","1":"value"}
+// return 0 when same, 1 when different
+int cJSON_ComparePrintSection(const struct cJSON *object1, const struct cJSON *object2, const char *dst_str) {
+  int is_diff = 0;
+  int is_sname_print = 0;
+  const struct cJSON *json1, *json2;
+  json1 = cJSON_GetObjectItem(object1, dst_str);
+  json2 = cJSON_GetObjectItem(object2, dst_str);
+
+  auto temp1_cJSON = cJSON_GetObjectItem(json1, "0");
+  auto temp2_cJSON = cJSON_GetObjectItem(json2, "0");
+  auto temp1_str = cJSON_GetStringValue(temp1_cJSON);
+  auto temp2_str = cJSON_GetStringValue(temp2_cJSON);
+  if (strcmp(temp1_str, temp2_str)) {
+    is_diff = is_sname_print = 1;
+    printf("%s : \n", dst_str);
+    printf("address : \n");
+	printf("%s-%s\n%s",
+		color[move_right], temp1_str, color[move_none]);
+	printf("%s+%s\n%s",
+		color[move_down], temp2_str, color[move_none]);
+  }
+
+  temp1_cJSON = cJSON_GetObjectItem(json1, "1");
+  temp2_cJSON = cJSON_GetObjectItem(json2, "1");
+  temp1_str = cJSON_GetStringValue(temp1_cJSON);
+  temp2_str = cJSON_GetStringValue(temp2_cJSON);
+  if (strcmp(temp1_str, temp2_str)) {
+    if (!is_sname_print) {
+      is_sname_print = 1;
+	  printf("%s : \n", dst_str);
+    }
+	printf("value : \n");
+    // myers' diff
+    myers_diff(split_string(temp1_str, " "), split_string(temp2_str, " "));
+  }
+  return is_diff;
+}
+
 // compare option x(improved) then output
 // show all section headers
 void compare_option_x_i(const char *filename1, const char *filename2) {
@@ -404,42 +528,44 @@ void compare_option_x_i(const char *filename1, const char *filename2) {
 
   struct cJSON *temp1_cJSON, *temp2_cJSON;
   const char *section_name;
-  map<const char *, struct cJSON *> s_map;
+  // the same string(const char*) may have different address
+  // so the key must be std::string
+  map<string, struct cJSON *> s_map;
 
   // create a map of sections
   for (int i = 0; i < array1_size; ++i) {
 	temp1_cJSON = cJSON_GetArrayItem(temp1_array_cJSON, i);
-	section_name = cJSON_GetStringValue(temp1_cJSON);
+	section_name = temp1_cJSON->child->string;
 	s_map[section_name] = temp1_cJSON;
-    printf("arr1:%s %s\n", temp1_cJSON->valuestring, cJSON_PrintUnformatted(temp1_cJSON));
   }
 
   // compare and update related variables
   for (int i = 0; i < array2_size; ++i) {
 	temp2_cJSON = cJSON_GetArrayItem(temp2_array_cJSON, i);
-	section_name = cJSON_GetStringValue(temp2_cJSON);
-    printf("arr2:%s\n", section_name);
+	section_name = temp2_cJSON->child->string;
 	if (s_map.find(section_name) != s_map.end()) {
 	  // there are same sections in two file
 	  // compare them
-	  cJSON_ComparePrintNormal(s_map[section_name], temp2_cJSON, section_name);
+	  int is_diff = cJSON_ComparePrintSection(s_map[section_name], temp2_cJSON, section_name);
 	  // after comparison, erase element
+	  if (is_diff)
+	    diff_item_num++;
+	  else
+	    same_item_num++;
 	  s_map.erase(section_name);
 	} else {
 	  // otherwise output individually
 	  char *temp_str;
-	  printf("%s+%s\n%s",
-		  color[MoveType_Down], cJSON_PrintUnformatted(temp2_cJSON), color[MoveType_None]);
+	  cJSON_PrintSection(temp2_cJSON, section_name, move_down);
 	  added_item_num++;
 	}
-
-	s_map[cJSON_GetStringValue(temp2_array_cJSON)] = temp1_cJSON;
   }
   // updating deleted_item_num must be here
   deleted_item_num += s_map.size();
   for (auto s : s_map) {
-	printf("%s-%s\n%s",
-		   color[MoveType_Right], cJSON_PrintUnformatted(s.second), color[MoveType_None]);
+	cJSON_PrintSection(s.second, s.first.c_str(), move_right);
+//	printf("%s-%s\n%s",
+//		   color[move_right], cJSON_PrintUnformatted(s.second), color[move_none]);
   }
 
   cJSON_Delete(object1);
