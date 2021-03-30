@@ -11,6 +11,6 @@ func main() {
     i := flag.Int("i", 666, "flag i")
     b := flag.Bool("b", false, "flag bool")
     flag.Parse()
-    fmt.Println(s, i, b)
+    fmt.Println(*s, *i, *b)
 }
 
