@@ -1,0 +1,18 @@
+# a dockerfile to improve centos image
+# add net-tools and vim
+
+FROM centos
+MAINTAINER nigo
+
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+
+# execute when building
+RUN yum -y install vim
+RUN yum -y install net-tools
+
+EXPOSE 80
+
+# execute when running
+CMD echo "Sucessfully add net-tools and vim"
+CMD /bin/bash

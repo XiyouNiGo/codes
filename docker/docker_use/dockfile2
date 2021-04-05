@@ -1,0 +1,4 @@
+FROM centos
+MAINTAINER nigo
+# only last works
+CMD ["ls", "-a"]

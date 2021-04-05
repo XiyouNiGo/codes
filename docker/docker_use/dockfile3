@@ -1,0 +1,4 @@
+FROM centos
+MAINTAINER nigo
+# You can append
+ENTRYPOINT ["ls", "-a"]
