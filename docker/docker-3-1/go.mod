@@ -1,9 +1,5 @@
 module docker-3-1
 
-replace github.com/Sirupsen/logrus v0.8.7 => github.com/sirupsen/logrus v0.8.7
-
-replace github.com/sirupsen/logrus v0.8.7 => github.com/Sirupsen/logrus v0.8.7
-
 go 1.13
 
 require (
