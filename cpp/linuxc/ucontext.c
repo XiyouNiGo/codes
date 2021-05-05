@@ -16,7 +16,7 @@ void task()
     printf("ctx_task\n");
   }
 }
-
+//合作式多任务处理
 int main()
 {
   int i;
@@ -35,6 +35,7 @@ int main()
   ctx_task.uc_stack.ss_size = CO_DEFAULT_STACK_SIZE;
   ctx_task.uc_link = &ctx_main;
   // 上下文属于纤程，不会保存到内核的TCB
+  //  节省上下文切换、调度器选择
   makecontext(&ctx_task, &task, 0);
 
   for (i = 0; i < 10; i++)
