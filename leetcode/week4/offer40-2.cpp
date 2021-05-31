@@ -4,7 +4,7 @@ using namespace std;
 
 class Solution {
 public:
-    bool verifyPostorder(vector<int>& postorder) {
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
 
     }
 };

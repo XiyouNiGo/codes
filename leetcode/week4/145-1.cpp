@@ -10,35 +10,29 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
-
 class Solution {
-    bool equal(TreeNode *left, TreeNode *right) {
-      if (!right) {
-        return true;
-      }
-      if (!left || (left->val != right->val)) {
-        return false;
-      }
-      return equal(left->left, right->left) && equal(left->right, right->right);
-    }
 public:
-    bool isSubStructure(TreeNode* A, TreeNode* B) {
+    vector<int> postorderTraversal(TreeNode* root) {
+      vector<int> res;
       stack<TreeNode*> s;
-      TreeNode *p = A;
+      TreeNode *p = root, *q = nullptr;
       while (p || !s.empty()) {
-        while (p) {
-          if (B && p->val == B->val && equal(p, B)) {
-            return true;
-          }
+        if (p) {
           s.push(p);
           p = p->left;
-        }
-        if (!s.empty()) {
-          p = s.top()->right;
-          s.pop();
+        } else {
+          p = s.top();
+          if (p->right && p->right != q) {
+            p = p->right;
+          } else {
+            s.pop();
+            res.push_back(p->val);
+            q = p;
+            p = nullptr;
+          }
         }
       }
-      return false;
+      return res;
     }
 };
 
