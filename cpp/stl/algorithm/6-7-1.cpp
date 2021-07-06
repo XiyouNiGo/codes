@@ -44,6 +44,7 @@ int main() {
 
   for_each(iv.begin(), iv.end(), display<int>());
   cout << endl;
+  
   // 第三参数为零参数的仿函数
   generate(iv2.begin(), iv2.end(), even_by_two());
   for_each(iv2.begin(), iv2.end(), display<int>());
@@ -132,16 +133,19 @@ int main() {
   cout << endl;
   for_each(iv6.begin(), iv6.end(), display<int>());
   cout << endl;
+
   // max接受参数为value，而不是由迭代器构成的区间
   cout << *max_element(iv5.begin(), iv5.end()) << endl;
   cout << *min_element(iv5.begin(), iv5.end()) << endl;
 
+  // 判断s2是否涵盖于s1（必须是有序集合）
   cout << includes(iv5.begin(), iv5.end(), iv6.begin(), iv6.end()) << endl;
 
   merge(iv5.begin(), iv5.end(), iv6.begin(), iv6.end(), iv7.begin());
   for_each(iv7.begin(), iv7.end(), display<int>());
   cout << endl;
 
+  // stable_partition
   partition(iv7.begin(), iv7.end(), even());
   for_each(iv7.begin(), iv7.end(), display<int>());
   cout << endl;
