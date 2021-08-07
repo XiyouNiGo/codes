@@ -38,6 +38,8 @@ int main(int argc, char **argv) {
   }
   print_caps();
 
+  printf("%d\n", cap_compare(caps, caps));
+
   cap_free(caps);
   return EXIT_SUCCESS;
 }

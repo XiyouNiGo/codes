@@ -8,8 +8,12 @@ func main(){
     for i := 0; i < len(slice1); i++ {
         slice1[i] = i
     }
+	slice1 = append(slice1, 10);
+	copy(slice1[5:], slice1[4:]);
+	slice1[4] = 10;
     fmt.Println(slice1, len(slice1), cap(slice1))
     fmt.Println("slice1 :", slice1[:5])
+    fmt.Println("slice1 :", slice1[5:])
 
     var slice2 []int
     // 为初始化前为nil
