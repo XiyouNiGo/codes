@@ -11,6 +11,7 @@ std::thread f() {
 std::thread g() {
   void some_other_function(int);
   std::thread t(some_other_function, 42);
+  /* move thread but not copy */
   return t;
 }
 
@@ -20,4 +21,3 @@ int main() {
   std::thread t2 = g();
   t2.join();
 }
-

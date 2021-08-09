@@ -10,6 +10,7 @@ void f() {
   for (unsigned i = 0; i < 20; ++i) {
 	threads.push_back(std::thread(do_work, i));
   }
+  /* to use member function */
   std::for_each(threads.begin(), threads.end(),
 				std::mem_fn(&std::thread::join));
 }

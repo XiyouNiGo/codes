@@ -25,9 +25,10 @@ void f() {
   try {
 	do_something_in_current_thread();
   }
+  /* to avoid the application ending abnormally */
   catch (...) {
-	t.join();
-	throw;
+    t.join();
+    throw;
   }
   t.join();
 }

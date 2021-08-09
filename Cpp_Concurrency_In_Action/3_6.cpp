@@ -14,6 +14,7 @@ class X {
   friend void swap(X &lhs, X &rhs) {
 	if (&lhs == &rhs)
 	  return;
+    /* scoped_lock is preferred. */
 	std::lock(lhs.m, rhs.m);
 	std::lock_guard<std::mutex> lock_a(lhs.m, std::adopt_lock);
 	std::lock_guard<std::mutex> lock_b(rhs.m, std::adopt_lock);

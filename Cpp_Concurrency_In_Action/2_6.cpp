@@ -37,6 +37,9 @@ void do_something_in_current_thread() {}
 void f() {
   int some_local_state;
   scoped_thread t(std::thread(func(some_local_state)));
+  /* that's wrong */
+//   std::thread my_thread(func(some_local_state));
+//   scoped_thread t(my_thread);
 
   do_something_in_current_thread();
 }

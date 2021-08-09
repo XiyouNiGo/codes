@@ -1,5 +1,6 @@
 #include <thread>
 
+/* RAII object */
 class thread_guard {
   std::thread &t;
  public:
