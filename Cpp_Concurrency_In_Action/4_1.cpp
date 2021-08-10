@@ -35,6 +35,8 @@ void data_preparation_thread() {
 void data_processing_thread() {
   while (true) {
 	std::unique_lock<std::mutex> lk(mut);
+    /* pred to check against spurious wake-up calls */
+    /* spurious wake-up calls may owe to signal or other thread change the state before this thread handling the data*/
 	data_cond.wait(lk, [] { return !data_queue.empty(); });
 	data_chunk data = data_queue.front();
 	data_queue.pop();

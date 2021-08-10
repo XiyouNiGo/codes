@@ -8,6 +8,7 @@ class threadsafe_queue {
  private:
   mutable std::mutex mut;
   std::queue<T> data_queue;
+  /* to implement wait_and_pop */
   std::condition_variable data_cond;
  public:
   threadsafe_queue() {}
