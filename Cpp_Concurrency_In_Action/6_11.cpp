@@ -54,6 +54,7 @@ class threadsafe_lookup_table {
   Hash hasher;
 
   bucket_type& get_bucket(Key const& key) const {
+    /* the count of buckets is a constance, so we needn't to lock. */
     std::size_t const bucket_index = hasher(key) % buckets.size();
     return *buckets[bucket_index];
   }
@@ -63,6 +64,7 @@ class threadsafe_lookup_table {
   typedef Value mapped_type;
   typedef Hash hash_type;
 
+  /* primer number is preferred (etc. 19) */
   threadsafe_lookup_table(unsigned num_buckets = 19,
                           Hash const& hasher_ = Hash())
       : buckets(num_buckets), hasher(hasher_) {

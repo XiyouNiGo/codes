@@ -37,6 +37,7 @@ class threadsafe_list {
     node* current = &head;
     std::unique_lock<std::mutex> lk(head.m);
     while (node* const next = current->next.get()) {
+      /* hand by hand */
       std::unique_lock<std::mutex> next_lk(next->m);
       lk.unlock();
       f(*next->data);
@@ -47,12 +48,14 @@ class threadsafe_list {
 
   template <typename Predicate>
   std::shared_ptr<T> find_first_if(Predicate p) {
+    /* if use instance, all the nodes will be destoryed */
     node* current = &head;
     std::unique_lock<std::mutex> lk(head.m);
     while (node* const next = current->next.get()) {
       std::unique_lock<std::mutex> next_lk(next->m);
       lk.unlock();
       if (p(*next->data)) {
+        /* needn't to continue */
         return next->data;
       }
       current = next;
@@ -69,6 +72,7 @@ class threadsafe_list {
       std::unique_lock<std::mutex> next_lk(next->m);
       if (p(*next->data)) {
         std::unique_ptr<node> old_next = std::move(current->next);
+        /* next->next won't be removed now, so we needn't to lock next->next */
         current->next = std::move(next->next);
         next_lk.unlock();
       } else {
