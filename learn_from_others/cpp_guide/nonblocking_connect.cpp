@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #include <iostream>
 
 /* non-blocking connect */
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]) {
                   << std::endl;
         continue;
       } else if (errno == EINPROGRESS) {
+        /* in progress */
         break;
       } else {
         close(clientfd);
@@ -67,6 +69,7 @@ int main(int argc, char* argv[]) {
 
   int err;
   socklen_t len = static_cast<socklen_t>(sizeof err);
+  /* getsockopt to determine whether connect was called successfully */
   if (::getsockopt(clientfd, SOL_SOCKET, SO_ERROR, &err, &len) < 0) {
     close(clientfd);
     return -1;
