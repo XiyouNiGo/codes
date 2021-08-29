@@ -21,6 +21,9 @@ int main(int argc, char *argv[]) {
     /* this is wrong  */
     /* st_enum1 e1 = ch; */
 
+    /* this is right */
+    st_enum1 e2 = st_enum1(ch);
+
     /* specify field to use the member */
     cout << sizeof(st_enum2::TEST) << endl;
     return 0;
