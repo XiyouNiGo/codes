@@ -14,7 +14,7 @@ int main(void) {
       break;
     case 0:
       printf("I am child.\n");
-      printf("The pid of child is: %d\n", getppid());
+      printf("The pid of child is: %d\n", getpid());
       printf("The pid of child's parent is: %d\n", getppid());
       printf("Child exiting...\n");
     default:
