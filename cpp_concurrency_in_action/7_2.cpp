@@ -12,6 +12,11 @@ class lock_free_stack {
 
  public:
   void push(T const& data) {
+    // A example to teach ZhouKuo using division by std::atomic
+    // std::atomic<int> ai;
+    // int tmp = ai.load();
+    // while (!ai.compare_exchange_weak(tmp, ai / 2));
+
     node* const new_node = new node(data);
     new_node->next = head.load();
     /* compare_exchange_weak may happen spurious failure owing to thread
