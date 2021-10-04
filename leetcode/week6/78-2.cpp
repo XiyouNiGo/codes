@@ -1,48 +1,28 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
 class Solution {
  public:
-  bool canPartitionKSubsets(vector<int> &nums, int k) {
-    if (k > nums.size()) {
-      return false;
-    }
-    int sum = accumulate(nums.begin(), nums.end(), 0);
-    // assert(sum % k == 0);
-    if (sum % k) {
-      return false;
-    }
-    used.assign(nums.begin(), nums.end());
-    return backtrack(k, 0, nums, 0, sum / k);
+  vector<vector<int>> subsets(vector<int>& nums) {
+    res.reserve(pow(2, nums.size()));
+    backtrack(nums, 0);
+    return res;
   }
-
- private:
-  vector<bool> used;
-  bool backtrack(int k, int bucket, vector<int> &nums, int start, int target) {
-    // 以桶的视角
-    // O(k*2^n)
-    if (k == 0) {
-      return true;
+private:
+  vector<int> track;
+  vector<vector<int>> res;
+  void backtrack(vector<int> &nums, int start) {
+    res.push_back(track);
+    for (int i = start; i < nums.size(); ++i) {
+      track.push_back(nums[i]);
+      backtrack(nums, i + 1);
+      track.pop_back();
     }
-    if (bucket == target) {
-      return backtrack(k - 1, 0, nums, 0, target);
-    }
-    for (int i = start; i < nums.size(); i++) {
-      used[i] = true;
-      bucket += nums[i];
-      if (backtrack(k, bucket, nums, i + 1, target)) {
-        return true;
-      }
-      used[i] = false;
-      bucket -= nums[i];
-    }
-    return false;
   }
 };
 
-int main(int argc, char *argv[]) {
-  vector<int> nums{1, 1, 1};
-  cout << Solution().canPartitionKSubsets(nums, 3) << endl;
+int main(int argc, char* argv[]) {
+  vector<int> nums{1, 2, 3};
+  Solution().subsets(nums);
   return 0;
 }
