@@ -26,6 +26,7 @@ class Solution {
                           [=](int b) { return b == target; }) != nums.end());
     }
     // 以数字视角，数字选桶
+    // O(k^n)
     for (int i = 0; i < bucket.size(); i++) {
       if (nums[index] + bucket[i] > target) {
         continue;
