@@ -8,10 +8,11 @@ class Solution {
     backtrack(nums, 0);
     return res;
   }
-private:
+
+ private:
   vector<int> track;
   vector<vector<int>> res;
-  void backtrack(vector<int> &nums, int start) {
+  void backtrack(vector<int>& nums, int start) {
     res.push_back(track);
     for (int i = start; i < nums.size(); ++i) {
       track.push_back(nums[i]);
