@@ -2,7 +2,7 @@
  * @Author: NiGo
  * @LastEditors: NiGo
  * @Date: 2021-10-06 12:08:35
- * @LastEditTime: 2021-10-06 15:22:07
+ * @LastEditTime: 2021-10-06 15:34:08
  * @Description: file content
  * @FilePath: /leetcode/week6/494-2.cpp
  */
@@ -24,11 +24,7 @@ class Solution {
     int size = nums.size();
     int t = 2 * sum + 1;
     int dp[size][t];
-    for (int i = 0; i < size; i++) {
-      for (int j = 0; j < t; j++) {
-        dp[i][j] = 0;
-      }
-    }
+    memset(dp[0], 0, sizeof(dp));
     dp[0][sum + nums[0]]++;
     dp[0][sum - nums[0]]++;
     for (int i = 1; i < size; i++) {
@@ -42,7 +38,7 @@ class Solution {
 };
 
 int main(int argc, char* argv[]) {
-  vector<int> nums = {1, 1, 1, 1, 1};
-  cout << Solution().findTargetSumWays(nums, 3) << endl;
+  vector<int> nums = {1};
+  cout << Solution().findTargetSumWays(nums, 1) << endl;
   return 0;
 }
