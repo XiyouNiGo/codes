@@ -1,8 +1,8 @@
 /*
  * @Author: NiGo
  * @LastEditors: NiGo
- * @Date: 2021-10-14 12:45:03
- * @LastEditTime: 2021-10-14 12:54:38
+ * @Date: 2021-10-14 22:14:32
+ * @LastEditTime: 2021-10-14 22:17:28
  * @Description: file content
  * @FilePath: /acwing/3-2.cpp
  */
@@ -13,9 +13,9 @@
 using namespace std;
 
 const int MAXSIZE = 1005;
-int v[MAXSIZE * MAXSIZE];
-int w[MAXSIZE * MAXSIZE];
-int f[MAXSIZE * MAXSIZE];
+int v[MAXSIZE];
+int w[MAXSIZE];
+int f[MAXSIZE];
 
 int main(int argc, char *argv[]) {
   int n = 0, m = 0;
@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i <= n; i++) {
     cin >> v[i] >> w[i];
   }
-  // 转化为01背包问题
 
   // O(N*M) O(M)
   for (int i = 1; i <= n; i++) {
-    for (int j = m; j >= v[i]; j--) {
+    // 跟01背包问题区别在于从前到后遍历
+    for (int j = v[i]; j <= m; j++) {
       f[j] = max(f[j], f[j - v[i]] + w[i]);
     }
   }
