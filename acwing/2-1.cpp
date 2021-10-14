@@ -2,7 +2,7 @@
  * @Author: NiGo
  * @LastEditors: NiGo
  * @Date: 2021-10-14 12:30:31
- * @LastEditTime: 2021-10-14 12:39:54
+ * @LastEditTime: 2021-10-14 12:50:15
  * @Description: file content
  * @FilePath: /acwing/2-1.cpp
  */
@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
     cin >> v[i] >> w[i];
   }
 
+  // O(N*M) O(N*M)
   for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= m; j++) {
       if (j < v[i]) {
