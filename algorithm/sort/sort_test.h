@@ -11,7 +11,7 @@ class SortTestCase : public testing::Test {
 
   virtual void SetUp() {}
 
-  virtual void TearDown() {}
+  virtual void TearDown() { AssertResult(); }
 
   void AssertResult() { ASSERT_EQ(nums, result); }
 };
