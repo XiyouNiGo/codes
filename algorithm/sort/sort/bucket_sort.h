@@ -3,6 +3,6 @@
 
 #include <vector>
 
-void BucketSort(std::vector<int>& nums, int min, int max);
+void BucketSort(std::vector<int>& nums);
 
 #endif // !SORT_BUCKET_SORT_H_

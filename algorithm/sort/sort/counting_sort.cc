@@ -1,10 +1,11 @@
-#include "sort/bucket_sort.h"
+#include "sort/counting_sort.h"
+
 #include <algorithm>
 
 using namespace std;
 
-// O(N + K) O(N + K) out-place 稳定
-void BucketSort(vector<int>& nums) {
+// O(N + K) O(K) out-place 稳定
+void CountingSort(vector<int>& nums) {
   int min = *min_element(nums.begin(), nums.end()),
       max = *max_element(nums.begin(), nums.end());
   int bucket_size = max - min + 1;
