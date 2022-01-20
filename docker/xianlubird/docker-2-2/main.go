@@ -22,12 +22,14 @@ func main() {
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		// Run: 阻塞直到完成
 		if err := cmd.Run(); err != nil {
 			fmt.Println(err)
 			os.Exit(-1)
 		}
 	}
 
+	// 加上clone参数和cgroup限制，再执行一次，以进入容器进程
 	cmd := exec.Command("/proc/self/exe")
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS,
@@ -36,6 +38,7 @@ func main() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
+	// Start: 不会等待命令完成
 	if err := cmd.Start(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -50,6 +53,7 @@ func main() {
 		// 限制容器进程
 		ioutil.WriteFile(path.Join(cgroup_memory_hierarchy_mount, "test_memory_limit", "memory.limit_in_bytes"),
 			[]byte("100m"), 0644)
+		// Wait会阻塞直到该命令执行完成，该命令必须是被Start方法开始执行的
 		cmd.Wait()
 	}
 }
