@@ -2,10 +2,11 @@ package container
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"os"
 	"os/exec"
 	"syscall"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 var (
@@ -15,9 +16,9 @@ var (
 	DefaultInfoLocation string = "/var/run/mydocker/%s/"
 	ConfigName          string = "config.json"
 	ContainerLogFile    string = "container.log"
-	RootUrl				string = "/root"
-	MntUrl				string = "/root/mnt/%s"
-	WriteLayerUrl 		string = "/root/writeLayer/%s"
+	RootUrl             string = "/root"
+	MntUrl              string = "/root/mnt/%s"
+	WriteLayerUrl       string = "/root/writeLayer/%s"
 )
 
 type ContainerInfo struct {
@@ -27,7 +28,7 @@ type ContainerInfo struct {
 	Command     string `json:"command"`    //容器内init运行命令
 	CreatedTime string `json:"createTime"` //创建时间
 	Status      string `json:"status"`     //容器的状态
-	Volume 		string `json:"volume"`	   //容器的数据卷
+	Volume      string `json:"volume"`     //容器的数据卷
 }
 
 func NewParentProcess(tty bool, containerName, volume, imageName string) (*exec.Cmd, *os.File) {
@@ -63,6 +64,7 @@ func NewParentProcess(tty bool, containerName, volume, imageName string) (*exec.
 
 	cmd.ExtraFiles = []*os.File{readPipe}
 	NewWorkSpace(volume, imageName, containerName)
+	// 指定容器初始化后的工作目录
 	cmd.Dir = fmt.Sprintf(MntUrl, containerName)
 	return cmd, writePipe
 }

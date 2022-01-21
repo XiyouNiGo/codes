@@ -8,6 +8,7 @@ import (
 
 type CgroupManager struct {
 	// cgroup在hierarchy中的路径 相当于创建的cgroup目录相对于root cgroup目录的路径
+	// 不同的hierarchy中具体cgroup相对路径相同，不过根节点绝对路径不同，因此保存的是相对路径
 	Path string
 	// 资源配置
 	Resource *subsystems.ResourceConfig

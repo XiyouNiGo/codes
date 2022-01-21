@@ -1,13 +1,14 @@
 package container
 
 import (
-	"syscall"
-	log "github.com/Sirupsen/logrus"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
-	"io/ioutil"
 	"strings"
-	"fmt"
+	"syscall"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 func RunContainerInitProcess() error {
@@ -18,6 +19,7 @@ func RunContainerInitProcess() error {
 
 	defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
 	syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
+	// 从PATH中查找命令，命令不需要再写完整路径
 	path, err := exec.LookPath(cmdArray[0])
 	if err != nil {
 		log.Errorf("Exec loop path error %v", err)
@@ -30,8 +32,8 @@ func RunContainerInitProcess() error {
 	return nil
 }
 
-
 func readUserCommand() []string {
+	// 3: 管道的文件描述符
 	pipe := os.NewFile(uintptr(3), "pipe")
 	msg, err := ioutil.ReadAll(pipe)
 	if err != nil {

@@ -2,13 +2,14 @@ package container
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"syscall"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 func RunContainerInitProcess() error {
@@ -59,9 +60,12 @@ func setUpMount() {
 	defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
 	syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
 
+	// tmpfs: 临时文件系统
 	syscall.Mount("tmpfs", "/dev", "tmpfs", syscall.MS_NOSUID|syscall.MS_STRICTATIME, "mode=755")
 }
 
+// pivot_root是把整个系统切换到一个新的root目录（整个mount namespace）
+// chroot是针对某个进程
 func pivotRoot(root string) error {
 	/**
 	  为了使当前root的老 root 和新 root 不在同一个文件系统下，我们把root重新mount了一次

@@ -13,6 +13,7 @@ func Run(tty bool, command string) {
 	if err := parent.Start(); err != nil {
 		log.Error(err)
 	}
+	// 每个容器都有对应的前台进程
 	parent.Wait()
 	os.Exit(-1)
 }

@@ -1,13 +1,16 @@
 package container
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"os"
 	"os/exec"
 	"syscall"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 func NewParentProcess(tty bool) (*exec.Cmd, *os.File) {
+	// args传参如果过长或带有特殊字符就会失败
+	// 因此改用Pipe
 	readPipe, writePipe, err := NewPipe()
 	if err != nil {
 		log.Errorf("New pipe error %v", err)
@@ -23,6 +26,7 @@ func NewParentProcess(tty bool) (*exec.Cmd, *os.File) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
+	// 传入管道读端句柄
 	cmd.ExtraFiles = []*os.File{readPipe}
 	return cmd, writePipe
 }

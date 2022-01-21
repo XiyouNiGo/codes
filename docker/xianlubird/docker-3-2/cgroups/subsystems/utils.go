@@ -1,14 +1,14 @@
 package subsystems
 
 import (
+	"bufio"
 	"fmt"
-	"strings"
 	"os"
 	"path"
-	"bufio"
+	"strings"
 )
 
-
+// 扫描/proc/self/mountinfo找出cgroup根节点目录
 func FindCgroupMountpoint(subsystem string) string {
 	f, err := os.Open("/proc/self/mountinfo")
 	if err != nil {
@@ -33,6 +33,7 @@ func FindCgroupMountpoint(subsystem string) string {
 	return ""
 }
 
+// 返回subsystem挂载的hierarchy中cgroup的位置
 func GetCgroupPath(subsystem string, cgroupPath string, autoCreate bool) (string, error) {
 	cgroupRoot := FindCgroupMountpoint(subsystem)
 	if _, err := os.Stat(path.Join(cgroupRoot, cgroupPath)); err == nil || (autoCreate && os.IsNotExist(err)) {
