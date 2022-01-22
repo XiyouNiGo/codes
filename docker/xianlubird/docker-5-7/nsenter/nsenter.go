@@ -8,12 +8,15 @@ package nsenter
 #include <string.h>
 #include <fcntl.h>
 
-__attribute__((constructor)) void enter_namespace(void) {
+// 构造函数，在所有Go运行的环境启动前运行
+// 从而避免Go多线程无法进入Mount Namespace
+__attribute__((constructor)) void enter_namespace(void)  `{
+	// 非exec命令只要不设置对应环境变量，这段内容就不会执行
 	char *mydocker_pid;
 	mydocker_pid = getenv("mydocker_pid");
 	if (mydocker_pid) {
 		//fprintf(stdout, "got mydocker_pid=%s\n", mydocker_pid);
-	} else {
+		} else {
 		//fprintf(stdout, "missing mydocker_pid env skip nsenter");
 		return;
 	}
