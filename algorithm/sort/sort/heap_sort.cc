@@ -1,5 +1,7 @@
 #include "sort/heap_sort.h"
 
+#include <algorithm>
+#include <functional>
 #include <vector>
 
 using namespace std;
@@ -60,4 +62,9 @@ void HeapSort(vector<int>& nums) {
     swap(nums[0], nums[i]);
     Heapify(nums, i, 0);
   }
+}
+
+void HeapSortStl(vector<int>& nums) {
+  make_heap(nums.begin(), nums.end(), greater<int>());
+  sort_heap(nums.begin(), nums.end(), greater<int>());
 }
