@@ -4,6 +4,8 @@ using namespace std;
 
 class Solution {
  public:
+  // 解法一： 动态规划
+  // O(mn) O(mn)
   int minDistance(string word1, string word2) {
     int n = word1.size();
     int m = word2.size();
@@ -26,7 +28,9 @@ class Solution {
         int left = dp[i - 1][j] + 1;
         int down = dp[i][j - 1] + 1;
         int left_down = dp[i - 1][j - 1];
-        if (word1[i - 1] != word2[j - 1]) left_down += 1;
+        if (word1[i - 1] != word2[j - 1]) {
+          left_down += 1;
+        }
         dp[i][j] = min(left, min(down, left_down));
       }
     }
