@@ -5,6 +5,7 @@ using namespace std;
 class Solution {
  public:
   // TODO: 没做出来...
+  // 不满足无后效性，所以需要倒序dp
   int calculateMinimumHP(vector<vector<int>>& dungeon) {
     int n = dungeon.size();
     if (n == 0) {
