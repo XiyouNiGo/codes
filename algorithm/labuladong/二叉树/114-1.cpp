@@ -16,7 +16,7 @@ class Solution {
  public:
   void flatten(TreeNode *root) {
     if (root == nullptr) {
-      return;
+      return;ew
     }
     flatten(root->left);
     flatten(root->right);
