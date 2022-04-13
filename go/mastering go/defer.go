@@ -9,6 +9,7 @@ func d1() {
 		defer fmt.Print(i, " ")
 	}
 }
+
 // 0 0 0
 func d2() {
 	for i := 3; i > 0; i-- {
@@ -18,6 +19,7 @@ func d2() {
 	}
 	fmt.Println()
 }
+
 // 最好方式
 func d3() {
 	for i := 3; i > 0; i-- {
