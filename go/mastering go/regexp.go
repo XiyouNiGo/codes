@@ -15,7 +15,7 @@ func main() {
 	// 查找第一次匹配的索引
 	fmt.Println(r.FindString("peach punch"))
 	fmt.Println(r.FindStringIndex("peach punch"))
-	// Submatch返回完全匹配和局部匹配的字符串
+	// Submatch返回完全匹配和局部匹配的字符串（其实就是捕获）
 	fmt.Println(r.FindStringSubmatch("peach punch"))
 	fmt.Println(r.FindStringSubmatchIndex("peach punch"))
 	// 返回所有的匹配项
