@@ -35,7 +35,7 @@ func (u UserResource) WebService() *restful.WebService {
 	ws.Route(ws.GET("/{user-id}").To(u.findUser).
 		// docs
 		Doc("get a user").
-		Param(ws.PathParameter("user-id", "identifier of the user").DataType("integer").DefaultValue("1")).
+		// Param(ws.PathParameter("user-id", "identifier of the user").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Writes(User{}). // on the response
 		Returns(200, "OK", User{}).
