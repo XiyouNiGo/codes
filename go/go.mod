@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	9fans.net/go v0.0.4 // indirect
+	github.com/Azure/go-autorest v11.1.2+incompatible // indirect
 	github.com/acroca/go-symbols v0.1.1 // indirect
 	github.com/cweill/gotests v1.6.0 // indirect
 	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba
@@ -16,4 +17,5 @@ require (
 	golang.org/x/sys v0.0.0-20220412071739-889880a91fd5
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
+	k8s.io/client-go v0.18.5 // indirect
 )
