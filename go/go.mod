@@ -7,6 +7,7 @@ require (
 	github.com/Azure/go-autorest v11.1.2+incompatible // indirect
 	github.com/acroca/go-symbols v0.1.1 // indirect
 	github.com/cweill/gotests v1.6.0 // indirect
+	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba
 	github.com/josharian/impl v1.1.0 // indirect
 	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
