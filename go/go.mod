@@ -11,6 +11,7 @@ require (
 	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba
 	github.com/josharian/impl v1.1.0 // indirect
 	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/ramya-rao-a/go-outline v0.0.0-20210608161538-9736a4bde949 // indirect
 	github.com/rogpeppe/godef v1.1.2 // indirect
 	github.com/sirupsen/logrus v1.8.1
