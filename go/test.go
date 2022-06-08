@@ -2,10 +2,33 @@ package main
 
 import (
 	"fmt"
-	"regexp"
+	"strings"
+
+	"github.com/go-sql-driver/mysql"
 )
 
+const (
+	ErrDuplicateEntryCode = 1062
+)
+
+func MysqlErrCode(err error) int {
+	mysqlErr, ok := err.(*mysql.MySQLError)
+	if !ok {
+		return 0
+	}
+	return int(mysqlErr.Number)
+}
+
 func main() {
-	match, _ := regexp.MatchString("^[a-z][a-z0-9-.]{0,5}[a-z0-9]$", "p123456e")
-	fmt.Println(match)
+	// sqlError := mysql.MySQLError{
+	// 	Number:  1062,
+	// 	Message: "Duplicate entry for key 'model_restag.uniq_project_resource'",
+	// }
+	// var mysqlErr *mysql.MySQLError
+	// if errors.As(errors.New(sqlError.Error()), &mysqlErr) && mysqlErr.Number == 1062 {
+	// 	fmt.Println("here")
+	// }
+	// fmt.Println(mysql.ErrBusyBuffer)
+	// fmt.Println(errors.New(sqlError.Error()))
+	fmt.Println(strings.Contains("Error 1062: Duplicate entry '114-0-vm-66d943b4-22d0-4d5e-ac07-429114cff43e-a' for key 'model_restag.uniq_project_resource'", "1062"))
 }
