@@ -21,6 +21,6 @@ require (
 	golang.org/x/sys v0.0.0-20220412071739-889880a91fd5
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
-	k8s.io/apimachinery v0.24.1 // indirect
+	k8s.io/apimachinery v0.24.2 // indirect
 	k8s.io/client-go v0.18.5 // indirect
 )
