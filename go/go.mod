@@ -8,6 +8,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/acroca/go-symbols v0.1.1 // indirect
 	github.com/cweill/gotests v1.6.0 // indirect
+	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
 	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba
