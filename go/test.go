@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -30,5 +31,13 @@ func main() {
 	// }
 	// fmt.Println(mysql.ErrBusyBuffer)
 	// fmt.Println(errors.New(sqlError.Error()))
-	fmt.Println(strings.Contains("Error 1062: Duplicate entry '114-0-vm-66d943b4-22d0-4d5e-ac07-429114cff43e-a' for key 'model_restag.uniq_project_resource'", "1062"))
+	// fmt.Println(strings.Contains("Error 1062: Duplicate entry '114-0-vm-66d943b4-22d0-4d5e-ac07-429114cff43e-a' for key 'model_restag.uniq_project_resource'", "1062"))
+	s := "/gapis/test"
+	// index := strings.Index(s, "gapis/")
+	index := strings.Index(s, "gapis/")
+	fmt.Println(index)
+	fmt.Println(s[index+len("gapis/"):])
+	// fmt.Println(s[index:])
+	s1, _ := json.Marshal("devbox-vm-template")
+	fmt.Println(string(s1))
 }
