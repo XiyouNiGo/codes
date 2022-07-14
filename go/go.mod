@@ -16,7 +16,9 @@ require (
 	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/ramya-rao-a/go-outline v0.0.0-20210608161538-9736a4bde949 // indirect
+	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/rogpeppe/godef v1.1.2 // indirect
+	github.com/segmentio/kafka-go v0.4.32 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/sqs/goreturns v0.0.0-20181028201513-538ac6014518 // indirect
 	golang.org/x/sys v0.0.0-20220412071739-889880a91fd5
