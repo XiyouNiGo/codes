@@ -16,6 +16,7 @@ func main() {
 		Topic:    "my-topic",
 		MinBytes: 10e3, // 10KB
 		MaxBytes: 10e6, // 10MB
+		
 	})
 
 	for {
