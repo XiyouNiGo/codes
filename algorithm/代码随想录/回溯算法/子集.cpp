@@ -4,10 +4,10 @@ using namespace std;
 
 class Solution {
  private:
-  vector<vector<int>> result;
+  vector<vector<int>> res;
   vector<int> track;
   void backtrack(vector<int>& nums, int startIndex) {
-    result.push_back(track);
+    res.push_back(track);
     if (startIndex >= nums.size()) {
       return;
     }
@@ -21,7 +21,7 @@ class Solution {
  public:
   vector<vector<int>> subsets(vector<int>& nums) {
     backtrack(nums, 0);
-    return result;
+    return res;
   }
 };
 
