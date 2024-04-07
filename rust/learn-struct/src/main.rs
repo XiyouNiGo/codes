@@ -1,50 +1,43 @@
-enum Flavor {
-    Spicy,
-    Sweet,
-    Fruity,
+// 不好的设计
+struct MyString<'a> {
+    text: &'a str, // String
 }
 
-struct Drink {
-    flavor: Flavor,
-    price: f64,
-}
-
-impl Drink {
-    // 关联变量
-    const MAX_PRICE: f64 = 10.0;
-    // 方法
-    fn buy(&self) {
-        if self.price > Drink::MAX_PRICE {
-            println!("I am poor");
-            return;
-        }
-        println!("buy it");
+impl<'a> MyString<'a> {
+    fn get_length(&self) -> usize {
+        self.text.len()
     }
-    // 关联函数
-    fn new(price: f64) -> Self {
-        Drink {
-            flavor: Flavor::Fruity,
-            price,
-        }
+    fn modify_data(&mut self) {
+        self.text = "world";
     }
 }
 
-fn print_drink(drink: Drink) {
-    match drink.flavor {
-        Flavor::Fruity => println!("fruity"),
-        Flavor::Spicy => println!("spicy"),
-        Flavor::Sweet => println!("sweet"),
+struct StringHolder {
+    data: String,
+}
+
+impl StringHolder {
+    fn get_length(&self) -> usize {
+        self.data.len()
     }
-    println!("{}", drink.price);
+    fn get_reference<'a>(&'a self) -> &'a String {
+        &self.data
+    }
+    fn get_ref(&self) -> &String {
+        &self.data
+    }
 }
 
 fn main() {
-    let sweet = Drink {
-        flavor: Flavor::Sweet,
-        price: 6.0,
+    let str1 = String::from("value");
+    let mut x = MyString {
+        text: str1.as_str(),
     };
-    println!("{}", sweet.price);
-    print_drink(sweet); // sweet
-    let sweet = Drink::new(12.0);
-    sweet.buy();
+    x.modify_data();
+    println!("{}", x.text);
+    let holder = StringHolder {
+        data: String::from("Hello"),
+    };
+    println!("{}", holder.get_reference());
+    println!("{}", holder.get_ref());
 }
