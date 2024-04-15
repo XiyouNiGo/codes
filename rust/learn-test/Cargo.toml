@@ -1,0 +1,15 @@
+[package]
+name = "learn-test"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.81"
+assert_fs = "1.1.1"
+structopt = "0.3.26"
+
+[dev-dependencies]
+assert_cmd = "2.0.14"
+predicates = "3.1.0"

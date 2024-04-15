@@ -1,7 +1,6 @@
 use std::ops::Add;
 
 // 编译时
-#[derive(Debug)]
 struct Point<T> {
     x: T,
     y: T,
@@ -24,10 +23,11 @@ where
 fn main() {
     let i1 = Point { x: 1, y: 2 };
     let i2 = Point { x: 1, y: 3 };
+    let i4 = Point::from(i1);
     let sum = i1 + i2;
-    println!("{:?}", sum);
+    // println!("{:?}", sum);
     let f1 = Point { x: 1.0, y: 2.2 };
     let f2 = Point { x: 1.0, y: 3.0 };
     let sum = f1 + f2;
-    println!("{:?}", sum);
+    // println!("{:?}", sum);
 }
