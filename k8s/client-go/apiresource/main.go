@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -26,7 +25,8 @@ func main() {
 	}
 
 	for _, group := range grpList.Groups {
-		bytes, _ := json.Marshal(group)
-		fmt.Println(string(bytes))
+		// bytes, _ := json.Marshal(group)
+		// fmt.Println(string(bytes))
+		fmt.Println(group.PreferredVersion.GroupVersion, group.PreferredVersion.Version)
 	}
 }
